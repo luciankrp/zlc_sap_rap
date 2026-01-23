@@ -1,0 +1,29 @@
+managed implementation in class zbp_lc_r_partner unique;
+strict ( 2 );
+
+define behavior for ZLC_R_PARTNER alias Partner
+persistent table zlc_dmo_partner
+lock master
+authorization master ( instance )
+etag master LocalLastChangedAt
+{
+  create ( authorization : global );
+  update;
+  delete;
+  field ( readonly ) PartnerNumber;
+
+  mapping for zlc_dmo_partner
+    {
+      PartnerNumber      = partner;
+      PartnerName        = name;
+      Street             = street;
+      City               = city;
+      Country            = country;
+      PaymentCurrency    = payment_currency;
+      LocalCreatedBy     = local_created_by;
+      LocalCreatedAt     = local_created_at;
+      LocalLastChangedBy = local_last_changed_by;
+      LocalLastChangedAt = local_last_changed_at;
+      LastChangedAt      = last_changed_at;
+    }
+}

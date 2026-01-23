@@ -1,0 +1,5 @@
+@EndUserText.label: 'Partner Service Definition'
+@ObjectModel.leadingEntity.name: 'ZLC_C_PARTNER'
+define service ZLC_UI_PARTNER {
+  expose ZLC_C_PARTNER as Partner;
+}

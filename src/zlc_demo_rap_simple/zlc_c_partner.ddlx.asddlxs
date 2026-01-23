@@ -1,0 +1,93 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+    typeName: 'Partner',
+    typeNamePlural: 'Partners',
+    title: {
+        type: #STANDARD,
+        label: 'Partner',
+        value: 'PartnerName'
+    },
+    description: {
+        type: #STANDARD,
+        label: 'Partner List'
+    }
+}
+annotate entity ZLC_C_PARTNER with
+{
+  @UI.facet: [
+    {
+      id         : 'idFacetCollection',
+      type       : #COLLECTION,
+      label      : 'Partner Collection'
+    },
+    {
+      id: 'idFacetPartnerFields',
+      parentId: 'idFacetCollection',
+      position: 10,
+      label: 'Information',
+      type: #IDENTIFICATION_REFERENCE,
+      targetQualifier: 'PARTNER_INFO'
+    },
+    {
+      id: 'idFacetPartnerAddress',
+      parentId: 'idFacetCollection',
+      position: 20,
+      label: 'Address',
+      type: #IDENTIFICATION_REFERENCE,
+      targetQualifier: 'PARTNER_ADDRESS'
+    }
+  ]
+
+  // With the "importance" attribute we can determine what information is displayed if not all elements fit on the screen.
+  @UI.lineItem: [{ position: 20, importance: #MEDIUM }]
+  @UI.identification: [{ position: 20, qualifier: 'PARTNER_INFO' }]
+  @EndUserText.label: 'Partner'
+  @EndUserText.quickInfo: 'Identifier of the partner'
+  PartnerNumber;
+
+  @UI.lineItem: [{ position: 10, importance: #HIGH  }]
+  @UI.identification: [{ position: 10, qualifier: 'PARTNER_INFO' }]
+  @EndUserText.label: 'Name'
+  @EndUserText.quickInfo: 'Partner name'
+  PartnerName;
+
+  //  @UI.lineItem: [{ position: 30, label: 'Street'  }]
+  @UI.identification: [{ position: 30, qualifier: 'PARTNER_ADDRESS' }]
+  @EndUserText.label: 'Street'
+  @EndUserText.quickInfo: 'Street and Housenumber'
+  Street;
+
+  //  @UI.lineItem: [{ position: 40, label: 'City'  }]
+  @UI.identification: [{ position: 40, qualifier: 'PARTNER_ADDRESS' }]
+  @EndUserText.label: 'City'
+  @EndUserText.quickInfo: 'City of the partner'
+  City;
+
+  @UI.lineItem: [{ position: 50, importance: #HIGH  }]
+  @UI.identification: [{ position: 50, qualifier: 'PARTNER_ADDRESS' }]
+  @EndUserText.label: 'Country'
+  @EndUserText.quickInfo: 'Country'
+  Country;
+
+  //  @UI.lineItem: [{ position: 60, label: 'Currency'  }]
+  @UI.identification: [{ position: 60, qualifier: 'PARTNER_INFO' }]
+  @EndUserText.label: 'PayCurr'
+  @EndUserText.quickInfo: 'Payment currency'
+  PaymentCurrency;
+
+  @UI.hidden: true
+  LocalCreatedBy;
+
+  @UI.hidden: true
+  LocalCreatedAt;
+
+  @UI.hidden: true
+  LocalLastChangedBy;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+
+  @UI.hidden: true
+  LastChangedAt;
+
+}
