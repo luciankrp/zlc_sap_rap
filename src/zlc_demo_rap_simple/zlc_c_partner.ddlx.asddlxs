@@ -21,6 +21,12 @@ annotate entity ZLC_C_PARTNER with
       label      : 'Partner Collection'
     },
     {
+      id         : 'idFacetAdminCollection',
+      parentId   : 'idFacetCollection',
+      type       : #COLLECTION
+  //      label      : 'Partner Collection'
+    },
+    {
       id: 'idFacetPartnerFields',
       parentId: 'idFacetCollection',
       position: 10,
@@ -36,16 +42,33 @@ annotate entity ZLC_C_PARTNER with
       type: #IDENTIFICATION_REFERENCE,
       targetQualifier: 'PARTNER_ADDRESS'
     }
+    ,
+    {
+      id: 'idFacetPartnerAdministrative',
+  //      parentId: 'idFacetAdminCollection',
+      position: 30,
+      label: 'Administrative',
+      type: #IDENTIFICATION_REFERENCE,
+      targetQualifier: 'PARTNER_ADMIN'
+    }
   ]
 
   // With the "importance" attribute we can determine what information is displayed if not all elements fit on the screen.
+  @UI.selectionField: [{ position: 10 }]
   @UI.lineItem: [{ position: 20, importance: #MEDIUM }]
   @UI.identification: [{ position: 20, qualifier: 'PARTNER_INFO' }]
   @EndUserText.label: 'Partner'
   @EndUserText.quickInfo: 'Identifier of the partner'
   PartnerNumber;
 
-  @UI.lineItem: [{ position: 10, importance: #HIGH  }]
+  @UI.selectionField: [{ position: 20 }]
+  @UI.lineItem: [
+    { position: 10, importance: #HIGH  },
+    { position: 10, type: #FOR_ACTION, label: 'Fill', dataAction: 'fillEmptyStreets'  },
+    { position: 20, type: #FOR_ACTION, label: 'Clear All', dataAction: 'clearAllEmptyStreets'  },
+    { position: 30, type: #FOR_ACTION, label: 'Copy', dataAction: 'copyLine'  },
+    { position: 40, type: #FOR_ACTION, label: 'Popup', dataAction: 'withPopup'  }
+  ]
   @UI.identification: [{ position: 10, qualifier: 'PARTNER_INFO' }]
   @EndUserText.label: 'Name'
   @EndUserText.quickInfo: 'Partner name'
@@ -67,21 +90,23 @@ annotate entity ZLC_C_PARTNER with
   @UI.identification: [{ position: 50, qualifier: 'PARTNER_ADDRESS' }]
   @EndUserText.label: 'Country'
   @EndUserText.quickInfo: 'Country'
+  @Consumption.valueHelpDefinition: [{ entity: { name: 'ZLC_C_CountryVH',  element: 'Country' } }]
   Country;
 
   //  @UI.lineItem: [{ position: 60, label: 'Currency'  }]
   @UI.identification: [{ position: 60, qualifier: 'PARTNER_INFO' }]
   @EndUserText.label: 'PayCurr'
   @EndUserText.quickInfo: 'Payment currency'
+  @Consumption.valueHelpDefinition: [{ entity: { name: 'I_CurrencyStdVH',  element: 'Currency' } }]
   PaymentCurrency;
 
-  @UI.hidden: true
+  @UI.identification: [{ position: 10, qualifier: 'PARTNER_ADMIN' }]
   LocalCreatedBy;
 
   @UI.hidden: true
   LocalCreatedAt;
 
-  @UI.hidden: true
+  @UI.identification: [{ position: 20, qualifier: 'PARTNER_ADMIN' }]
   LocalLastChangedBy;
 
   @UI.hidden: true

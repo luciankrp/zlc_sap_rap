@@ -6,11 +6,25 @@ persistent table zlc_dmo_partner
 lock master
 authorization master ( instance )
 etag master LocalLastChangedAt
+late numbering
 {
   create ( authorization : global );
   update;
   delete;
-  field ( readonly ) PartnerNumber;
+  field ( readonly ) PartnerNumber, LocalCreatedBy, LocalLastChangedBy;
+
+  // Validations
+  validation validateKeyIsFilled on save { create; }
+  validation validateCoreData on save { create; field Country, PaymentCurrency; }
+
+  // Determinations
+  determination fillCurrency on modify { create; update; }
+
+  // Actions
+  action fillEmptyStreets result [1] $self;
+  static action ( authorization : global ) clearAllEmptyStreets;
+  static action ( authorization : global ) withPopup parameter ZLC_I_PopupEntity;
+  factory action copyLine [1];
 
   mapping for zlc_dmo_partner
     {

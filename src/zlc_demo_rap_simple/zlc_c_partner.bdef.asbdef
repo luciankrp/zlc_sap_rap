@@ -6,4 +6,11 @@ define behavior for ZLC_C_PARTNER alias Partner
   use create;
   use update;
   use delete;
+
+  // Actions
+  use action fillEmptyStreets;
+  use action clearAllEmptyStreets;
+  use action copyLine;
+  use action withPopup;
+
 }

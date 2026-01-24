@@ -9,7 +9,8 @@ CLASS zlc_lc_demo_eml DEFINITION
     METHODS:
       eml_read IMPORTING out TYPE REF TO if_oo_adt_classrun_out,
       eml_create IMPORTING out TYPE REF TO if_oo_adt_classrun_out,
-      eml_update IMPORTING out TYPE REF TO if_oo_adt_classrun_out.
+      eml_update IMPORTING out TYPE REF TO if_oo_adt_classrun_out,
+      eml_modify_action IMPORTING out TYPE REF TO if_oo_adt_classrun_out.
   PROTECTED SECTION.
   PRIVATE SECTION.
 ENDCLASS.
@@ -28,6 +29,9 @@ CLASS zlc_lc_demo_eml IMPLEMENTATION.
 
     " Update
 *    me->eml_update( out ).
+
+    " Execute action via EML
+    me->eml_modify_action( out ).
 
   ENDMETHOD.
 
@@ -142,6 +146,30 @@ CLASS zlc_lc_demo_eml IMPLEMENTATION.
     IF lt_failed-partner IS INITIAL.
       out->write( 'Updated' ).
       COMMIT ENTITIES.
+    ENDIF.
+
+  ENDMETHOD.
+
+  METHOD eml_modify_action.
+**********************************************************************
+* Actions can also be triggered via EML using the MODIFY statement.
+* Accordingly, you only have to specify the action to be triggered and the key of the data record.
+* The RESULT is particularly important for the return, since the return is contained here.
+**********************************************************************
+
+    MODIFY ENTITIES OF zlc_r_partner
+      ENTITY Partner EXECUTE fillEmptyStreets
+      FROM VALUE #( ( PartnerNumber = '1000000008' ) )
+      RESULT DATA(lt_result)
+      MAPPED DATA(lt_mapped)
+      FAILED DATA(lt_failed)
+      REPORTED DATA(lt_reported).
+
+    IF line_exists( lt_result[ 1 ] ).
+      out->write( lt_result[ 1 ]-PartnerNumber ).
+      out->write( lt_result[ 1 ]-%param ).
+    ELSE.
+      out->write( 'Not worked' ).
     ENDIF.
 
   ENDMETHOD.
