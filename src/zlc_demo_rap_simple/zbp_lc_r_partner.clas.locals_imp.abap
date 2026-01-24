@@ -63,6 +63,10 @@ CLASS lhc_Partner DEFINITION INHERITING FROM cl_abap_behavior_handler.
 
     METHODS withPopup FOR MODIFY
       IMPORTING keys FOR ACTION Partner~withPopup.
+    METHODS get_instance_features FOR INSTANCE FEATURES
+      IMPORTING keys REQUEST requested_features FOR Partner RESULT result.
+    METHODS get_global_features FOR GLOBAL FEATURES
+      IMPORTING REQUEST requested_features FOR partner RESULT result.
 
 ENDCLASS.
 
@@ -364,6 +368,60 @@ CLASS lhc_Partner IMPLEMENTATION.
           ( %msg = new_message_with_text( severity = if_abap_behv_message=>severity-information text = 'Dummy message' ) )
         ).
     ENDCASE.
+
+  ENDMETHOD.
+
+  METHOD get_instance_features.
+**********************************************************************
+* With Feature Control, the various fields and properties can be adjusted again at runtime,
+* for example to activate or deactivate actions.
+* Instance-based feature ("features:instance") - The data of the individual instance is available to you,
+* it is decided per instance how the feature is handled.
+**********************************************************************
+* Hint: The features are all activated by default and must now be deactivated for the entities that do not match.
+**********************************************************************
+
+    IF requested_features-%action-fillEmptyStreets = if_abap_behv=>mk-on.
+
+      " Read all
+      READ ENTITIES OF zlc_r_partner IN LOCAL MODE
+        ENTITY Partner
+        FIELDS ( Street )
+        WITH CORRESPONDING #( keys )
+        RESULT DATA(lt_partners).
+
+      " Deactivate button where street is not empty
+      DELETE lt_partners WHERE Street IS INITIAL.
+
+      result = VALUE #( BASE result FOR ls_partner IN lt_partners (
+                          %tky-%key-PartnerNumber = ls_partner-%tky-%key-PartnerNumber
+                          %features-%action-fillEmptyStreets = if_abap_behv=>mk-on ) ).
+
+    ENDIF.
+
+  ENDMETHOD.
+
+  METHOD get_global_features.
+**********************************************************************
+* We want to restrict a feature on a global level, namely the deletion of records via the application.
+* The feature is currently enabled for everyone who can use the application.
+**********************************************************************
+* Again, you should note that you have to deactivate the feature where it is not needed.
+* The return this time is a structure because we're editing the entire feature (delete) here.
+**********************************************************************
+
+    IF requested_features-%delete = if_abap_behv=>mk-on.
+
+      " Deactivate button
+      result-%delete = COND #( WHEN sy-uname = 'CB9980004749'
+                         THEN if_abap_behv=>mk-off
+                         ELSE if_abap_behv=>mk-on ).
+
+*      result-%delete = COND #( WHEN cl_abap_context_info=>get_user_alias( ) = '<USER>'
+*                               THEN if_abap_behv=>mk-off
+*                               ELSE if_abap_behv=>mk-on ).
+
+    ENDIF.
 
   ENDMETHOD.
 

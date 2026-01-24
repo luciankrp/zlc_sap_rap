@@ -1,0 +1,46 @@
+managed implementation in class zbp_lc_r_invoice unique;
+strict ( 2 );
+
+define behavior for ZLC_R_Invoice alias Invoice
+persistent table zlc_dmo_invoice
+lock master
+authorization master ( instance )
+//etag master <field_name>
+{
+  create ( authorization : global );
+  update;
+  delete;
+  field ( readonly : update ) Document;
+  association _Position { create; }
+
+  mapping for zlc_dmo_invoice
+    {
+      Document = document;
+      Partner  = partner;
+      DocDate  = doc_date;
+      DocTime  = doc_time;
+    }
+}
+
+define behavior for ZLC_I_Position alias Position
+persistent table zlc_dmo_position
+lock dependent by _Invoice
+authorization dependent by _Invoice
+//etag master <field_name>
+{
+  update;
+  delete;
+  field ( readonly ) Document;
+  field ( readonly : update ) PositionNumber;
+  association _Invoice;
+
+  mapping for zlc_dmo_position
+    {
+      Document       = document;
+      PositionNumber = pos_number;
+      Material       = material;
+      Price          = price;
+      Quantity       = quantity;
+      Currency       = currency;
+    }
+}

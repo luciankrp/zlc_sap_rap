@@ -1,0 +1,6 @@
+@EndUserText.label: 'Invoice Service Definition'
+@ObjectModel.leadingEntity.name: 'ZLC_C_INVOICE'
+define service ZLC_UI_INVOICE {
+  expose ZLC_C_INVOICE  as Invoice;
+  expose ZLC_C_POSITION as Position;
+}

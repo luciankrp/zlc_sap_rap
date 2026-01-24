@@ -1,5 +1,6 @@
 projection;
 strict ( 2 );
+use draft;
 
 define behavior for ZLC_C_PARTNER alias Partner
 {
@@ -12,5 +13,12 @@ define behavior for ZLC_C_PARTNER alias Partner
   use action clearAllEmptyStreets;
   use action copyLine;
   use action withPopup;
+
+  // Draft Actions
+  use action Activate;
+  use action Discard;
+  use action Edit;
+  use action Prepare;
+  use action Resume;
 
 }

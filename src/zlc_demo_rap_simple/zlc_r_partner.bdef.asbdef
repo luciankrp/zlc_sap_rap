@@ -1,16 +1,19 @@
 managed implementation in class zbp_lc_r_partner unique;
 strict ( 2 );
+with draft;
 
 define behavior for ZLC_R_PARTNER alias Partner
 persistent table zlc_dmo_partner
+draft table zlc_dmo_dpartner
 lock master
+total etag LastChangedAt
 authorization master ( instance )
 etag master LocalLastChangedAt
 late numbering
 {
   create ( authorization : global );
   update;
-  delete;
+  delete ( features : global );
   field ( readonly ) PartnerNumber, LocalCreatedBy, LocalLastChangedBy;
 
   // Validations
@@ -21,10 +24,22 @@ late numbering
   determination fillCurrency on modify { create; update; }
 
   // Actions
-  action fillEmptyStreets result [1] $self;
+  action ( features : instance ) fillEmptyStreets result [1] $self;
   static action ( authorization : global ) clearAllEmptyStreets;
   static action ( authorization : global ) withPopup parameter ZLC_I_PopupEntity;
   factory action copyLine [1];
+
+  // Draft actions
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Edit;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation validateCoreData;
+    validation validateKeyIsFilled;
+  }
+
 
   mapping for zlc_dmo_partner
     {

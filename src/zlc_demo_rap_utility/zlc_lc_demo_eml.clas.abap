@@ -10,7 +10,10 @@ CLASS zlc_lc_demo_eml DEFINITION
       eml_read IMPORTING out TYPE REF TO if_oo_adt_classrun_out,
       eml_create IMPORTING out TYPE REF TO if_oo_adt_classrun_out,
       eml_update IMPORTING out TYPE REF TO if_oo_adt_classrun_out,
-      eml_modify_action IMPORTING out TYPE REF TO if_oo_adt_classrun_out.
+      eml_action IMPORTING out TYPE REF TO if_oo_adt_classrun_out,
+      eml_rba IMPORTING out TYPE REF TO if_oo_adt_classrun_out,
+      eml_cba IMPORTING out TYPE REF TO if_oo_adt_classrun_out,
+      eml_delete IMPORTING out TYPE REF TO if_oo_adt_classrun_out.
   PROTECTED SECTION.
   PRIVATE SECTION.
 ENDCLASS.
@@ -31,7 +34,7 @@ CLASS zlc_lc_demo_eml IMPLEMENTATION.
 *    me->eml_update( out ).
 
     " Execute action via EML
-    me->eml_modify_action( out ).
+    me->eml_action( out ).
 
   ENDMETHOD.
 
@@ -150,7 +153,7 @@ CLASS zlc_lc_demo_eml IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD eml_modify_action.
+  METHOD eml_action.
 **********************************************************************
 * Actions can also be triggered via EML using the MODIFY statement.
 * Accordingly, you only have to specify the action to be triggered and the key of the data record.
@@ -171,6 +174,18 @@ CLASS zlc_lc_demo_eml IMPLEMENTATION.
     ELSE.
       out->write( 'Not worked' ).
     ENDIF.
+
+  ENDMETHOD.
+
+  METHOD eml_rba.
+
+  ENDMETHOD.
+
+  METHOD eml_cba.
+
+  ENDMETHOD.
+
+  METHOD eml_delete.
 
   ENDMETHOD.
 
