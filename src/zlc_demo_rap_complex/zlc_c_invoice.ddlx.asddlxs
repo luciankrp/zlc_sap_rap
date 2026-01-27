@@ -1,0 +1,43 @@
+@Metadata.layer: #CORE
+
+@UI.headerInfo: { typeName: 'Invoice',
+                  typeNamePlural: 'Invoices',
+                  typeImageUrl: 'sap-icon://my-sales-order',
+                  title.value: 'Document',
+                  description.label: '(Description)' }
+
+annotate entity ZLC_C_INVOICE with
+
+{
+  @UI.facet: [ { id: 'idFacetControlHeader',
+                 purpose: #HEADER,
+                 label: 'Header',
+                 type: #FIELDGROUP_REFERENCE,
+                 targetQualifier: 'CONTROL_AREA' },
+               { id: 'idFacetFieldArea',
+                 purpose: #STANDARD,
+                 label: 'Information',
+                 type: #FIELDGROUP_REFERENCE,
+                 targetQualifier: 'FIELD_AREA' },
+               { id: 'idFacetLineItem', position: 20, type: #LINEITEM_REFERENCE, targetElement: '_Position' } ]
+  @UI.lineItem: [ { position: 10 } ]
+  @UI.selectionField: [ { position: 10 } ]
+  Document;
+
+  @UI.fieldGroup: [ { position: 20, qualifier: 'FIELD_AREA', label: 'Date' } ]
+  @UI.lineItem: [ { position: 20 } ]
+  DocDate;
+
+  @UI.fieldGroup: [ { position: 30, qualifier: 'FIELD_AREA', label: 'Time' } ]
+  @UI.lineItem: [ { position: 30 } ]
+  DocTime;
+
+  @UI.fieldGroup: [ { position: 40, qualifier: 'CONTROL_AREA', label: 'Partner' } ]
+  @UI.lineItem: [ { position: 40 } ]
+  @UI.selectionField: [ { position: 10 } ]
+  Partner;
+
+  /* Associations */
+  @UI.hidden: true
+  _Position;
+}

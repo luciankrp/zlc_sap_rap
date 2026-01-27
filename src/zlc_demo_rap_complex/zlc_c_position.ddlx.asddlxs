@@ -1,0 +1,48 @@
+@Metadata.layer: #CORE
+
+@UI.headerInfo: { typeName: 'Position',
+                  typeNamePlural: 'Positions',
+                  title.value: 'PositionNumber',
+                  description.value: 'Material' }
+
+annotate entity ZLC_C_POSITION with
+
+{
+  @UI.facet: [ { id: 'idFacetMaterialGroup',
+                 label: 'Material',
+                 position: 10,
+                 type: #FIELDGROUP_REFERENCE,
+                 targetQualifier: 'MATERIAL_AREA' },
+               { id: 'idFacetPriceGroup',
+                 label: 'Information',
+                 position: 20,
+                 type: #FIELDGROUP_REFERENCE,
+                 targetQualifier: 'PRICE_AREA' } ]
+  @UI.hidden: true
+  Document;
+
+  @UI.lineItem: [ { position: 10 } ]
+  PositionNumber;
+  
+//  @UI.fieldGroup: [ { position: 20, qualifier: 'MATERIAL_AREA', label: 'Material' } ]
+  @UI.lineItem: [ { position: 20 } ]
+  Material;
+
+  @UI.fieldGroup: [ { position: 30, qualifier: 'MATERIAL_AREA', label: 'Quantity' } ]
+  @UI.lineItem: [ { position: 30 } ]
+  Quantity;
+
+  @UI.fieldGroup: [ { position: 40, qualifier: 'MATERIAL_AREA', label: 'Unit' } ]
+  @UI.lineItem: [ { position: 40 } ]
+  Unit;
+
+  @UI.fieldGroup: [ { position: 50, qualifier: 'PRICE_AREA', label: 'Price' } ]
+  Price;
+
+  @UI.fieldGroup: [ { position: 60, qualifier: 'PRICE_AREA', label: 'Currency' } ]
+  Currency;
+
+  /* Associations */
+  @UI.hidden: true
+  _Invoice;
+}

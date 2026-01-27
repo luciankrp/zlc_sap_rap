@@ -16,42 +16,64 @@ ENDCLASS.
 
 
 CLASS zlc_lc_demo_set_initial_data IMPLEMENTATION.
-
   METHOD if_oo_adt_classrun~main.
+    " Invoice - Set Initial Data in table ZLC_DMO_MATERIAL
+    DATA lt_material TYPE STANDARD TABLE OF zlc_dmo_material.
 
-    " Partner - Set Initial Data (ZLC_DEMO_RAP_SIMPLE)
-    DATA lt_partner TYPE STANDARD TABLE OF zlc_dmo_partner.
+    lt_material = VALUE #( ( material       = 'F0001'
+                             name           = 'Peanuts'
+                             description    = 'Roasted Peanuts from US'
+                             stock          = 900
+                             stock_unit     = 'ST'
+                             price_per_unit = 3
+                             currency       = 'USD' )
+                           ( material       = 'F0002'
+                             name           = 'Rice'
+                             description    = 'Big bag rice from China'
+                             stock          = 120
+                             stock_unit     = 'BAG'
+                             price_per_unit = 12
+                             currency       = 'USD' )
+                           ( material       = 'R0001'
+                             name           = 'Gas'
+                             description    = 'Gas from Siberia'
+                             stock          = 5000
+                             stock_unit     = 'MMQ'
+                             price_per_unit = 1560
+                             currency       = 'RUB' ) ).
 
-    lt_partner = VALUE #( ( partner = '1000000000'
-                            name = 'SAP'
-                            street = 'Test Street 1'
-                            City = 'Berlin'
-                            country = 'DE'
-                            payment_currency = 'EUR' )
-                          ( partner = '1000000001'
-                            name = 'Microsoft'
-                            street = 'Test Street 1'
-                            City = 'New York'
-                            country = 'US'
-                            payment_currency = 'USD' )
-                          ( partner = '1000000002'
-                            name = 'Meta'
-                            street = 'Test Street 1'
-                            City = 'Los Angeles'
-                            country = 'US'
-                            payment_currency = 'USD' )
-                          ( partner = '1000000003'
-                            name = 'X Corp'
-                            street = 'Test Street 1'
-                            City = 'San Francisco'
-                            country = 'US'
-                            payment_currency = 'USD' )
-                        ).
+    INSERT zlc_dmo_material FROM TABLE @lt_material.
 
-    DELETE FROM zlc_dmo_partner.
+    COMMIT WORK.
 
-    INSERT zlc_dmo_partner FROM TABLE @lt_partner.
-
+*    " Partner - Set Initial Data (ZLC_DEMO_RAP_SIMPLE)
+*    DATA lt_partner TYPE STANDARD TABLE OF zlc_dmo_partner.
+*
+*    lt_partner = VALUE #( street = 'Test Street 1'
+*                          ( partner          = '1000000000'
+*                            name             = 'SAP'
+*                            City             = 'Berlin'
+*                            country          = 'DE'
+*                            payment_currency = 'EUR' )
+*                          ( partner          = '1000000001'
+*                            name             = 'Microsoft'
+*                            City             = 'New York'
+*                            country          = 'US'
+*                            payment_currency = 'USD' )
+*                          ( partner          = '1000000002'
+*                            name             = 'Meta'
+*                            City             = 'Los Angeles'
+*                            country          = 'US'
+*                            payment_currency = 'USD' )
+*                          ( partner          = '1000000003'
+*                            name             = 'X Corp'
+*                            City             = 'San Francisco'
+*                            country          = 'US'
+*                            payment_currency = 'USD' ) ).
+*
+*    DELETE FROM zlc_dmo_partner.
+*
+*    INSERT zlc_dmo_partner FROM TABLE @lt_partner.
   ENDMETHOD.
 
   METHOD create_numberrange_intervals.

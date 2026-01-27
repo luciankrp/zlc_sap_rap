@@ -33,8 +33,17 @@ CLASS zlc_lc_demo_eml IMPLEMENTATION.
     " Update
 *    me->eml_update( out ).
 
-    " Execute action via EML
-    me->eml_action( out ).
+*    " Execute action via EML
+*    me->eml_action( out ).
+
+    " Create by association
+    me->eml_cba( out ).
+
+    " Read by association
+    me->eml_rba( out ).
+
+    " Delete
+    me->eml_delete( out ).
 
   ENDMETHOD.
 
@@ -178,14 +187,125 @@ CLASS zlc_lc_demo_eml IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD eml_rba.
+    " Read by association
+    READ ENTITIES OF zlc_r_invoice
 
+         ENTITY Invoice
+         ALL FIELDS WITH VALUE #( ( %tky-%key-Document = '40000000' )
+                                  ( %tky-%key-Document = '40000001' ) )
+         RESULT DATA(lt_invoices)
+
+         ENTITY Invoice BY \_Position
+         FIELDS ( Material PositionNumber Price ) WITH VALUE #( ( %tky-%key-Document = '40000000' )
+                                                                ( %tky-%key-Document = '40000001' ) )
+         RESULT DATA(lt_positions)
+
+         " TODO: variable is assigned but never used (ABAP cleaner)
+         FAILED DATA(ls_failed).
+
+    out->write( 'Invoices:' ).
+    out->write( lt_invoices ).
+    out->write( 'Positions:' ).
+    out->write( lt_positions ).
   ENDMETHOD.
 
   METHOD eml_cba.
 
+*    DATA:
+*      lt_new_invoice  TYPE TABLE FOR CREATE zlc_r_invoice,
+*      lt_new_position TYPE TABLE FOR CREATE zlc_r_invoice\_Position.
+
+
+*    " Invoice
+*    lt_new_invoice = VALUE #(
+*        ( %cid = 'MyCID_1'
+*          %key-Document = '40000000'
+*          %data-Partner = '1000000008'
+*          %control = VALUE #( Document = if_abap_behv=>mk-on Partner = if_abap_behv=>mk-on ) ) ).
+*
+*    " Position
+*    lt_new_position = VALUE #(
+*        ( %cid_ref = 'MyCID_1'
+*          %target  = VALUE #(
+*              ( %cid           = 'MyCID_P1'
+*                PositionNumber = 1
+*                Material       = 'R0001'
+*                %control       = VALUE #( PositionNumber = if_abap_behv=>mk-on Material = if_abap_behv=>mk-on ) )
+*              ( %cid           = 'MyCID_P1'
+*                PositionNumber = 2
+*                Price          = '2.20'
+*                Currency       = 'EUR'
+*                %control       = VALUE #( PositionNumber = if_abap_behv=>mk-on Price = if_abap_behv=>mk-on Currency = if_abap_behv=>mk-on ) ) ) ) ).
+
+    " Create by association
+    MODIFY ENTITIES OF zlc_r_invoice
+
+      ENTITY Invoice CREATE FROM VALUE #(
+        ( %cid = 'MyCID_1'
+          %key-Document = '40000000'
+          %data-Partner = '1000000008'
+          %control = VALUE #( Document = if_abap_behv=>mk-on Partner = if_abap_behv=>mk-on ) )
+        ( %cid = 'MyCID_2'
+          %key-Document = '40000001'
+          %data-Partner = '1000000000'
+          %control = VALUE #( Document = if_abap_behv=>mk-on Partner = if_abap_behv=>mk-on ) ) )
+
+      ENTITY Invoice CREATE BY \_Position FROM VALUE #(
+        ( %cid_ref = 'MyCID_1'
+          %target  = VALUE #(
+              ( %cid           = 'MyCID_P1'
+                PositionNumber = 1
+                Material       = 'R0001'
+                %control       = VALUE #( PositionNumber = if_abap_behv=>mk-on Material = if_abap_behv=>mk-on ) )
+              ( %cid           = 'MyCID_P2'
+                PositionNumber = 2
+                Price          = '2.20'
+                Currency       = 'EUR'
+                %control       = VALUE #( PositionNumber = if_abap_behv=>mk-on Price = if_abap_behv=>mk-on Currency = if_abap_behv=>mk-on ) ) ) )
+        ( %cid_ref = 'MyCID_2'
+          %target  = VALUE #(
+              ( %cid           = 'MyCID_P3'
+                PositionNumber = 1
+                Material       = 'R0002'
+                %control       = VALUE #( PositionNumber = if_abap_behv=>mk-on Material = if_abap_behv=>mk-on ) )
+              ( %cid           = 'MyCID_P4'
+                PositionNumber = 2
+                Price          = '3.15'
+                Currency       = 'USD'
+                %control       = VALUE #( PositionNumber = if_abap_behv=>mk-on Price = if_abap_behv=>mk-on Currency = if_abap_behv=>mk-on ) ) ) ) )
+
+      FAILED DATA(ls_failed)
+      MAPPED DATA(ls_mapped)
+      REPORTED DATA(ls_reported).
+
+    COMMIT ENTITIES.
+
+    IF ls_failed-invoice IS NOT INITIAL.
+      out->write( 'Failed!' ).
+    ELSE.
+      out->write( 'Creation OK' ).
+    ENDIF.
   ENDMETHOD.
 
   METHOD eml_delete.
+
+*    DATA lt_filter TYPE STANDARD TABLE OF zlc_r_invoice WITH EMPTY KEY.
+*
+*    lt_filter = VALUE #( ( Document = '40000001' ) ).
+
+    "   Delete
+    MODIFY ENTITIES OF zlc_r_invoice
+      ENTITY Invoice
+      DELETE FROM VALUE #( ( %tky-%key-Document = '40000001' ) )
+      FAILED DATA(ls_failed).
+
+    COMMIT ENTITIES.
+
+    IF ls_failed-invoice IS NOT INITIAL.
+      out->write( 'Failed!' ).
+    ELSE.
+      out->write( 'Deletion OK' ).
+    ENDIF.
 
   ENDMETHOD.
 

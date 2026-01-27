@@ -1,5 +1,6 @@
 @AccessControl.authorizationCheck: #NOT_REQUIRED
 @EndUserText.label: 'Consumption for Position'
+@Metadata.allowExtensions: true
 define view entity ZLC_C_POSITION
   as projection on ZLC_I_Position
 {
