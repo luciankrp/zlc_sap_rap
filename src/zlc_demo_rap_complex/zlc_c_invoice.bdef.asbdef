@@ -8,6 +8,8 @@ define behavior for ZLC_C_INVOICE alias Invoice
   use delete;
 
   use association _Position { create; }
+
+  use action sendEmail;
 }
 
 define behavior for ZLC_C_POSITION alias Position

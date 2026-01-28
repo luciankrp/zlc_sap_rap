@@ -13,6 +13,8 @@ authorization master ( instance )
   field ( readonly : update ) Document;
   association _Position { create; }
 
+  action sendEmail parameter ZLC_I_SendEmailPopup;
+
   mapping for zlc_dmo_invoice
     {
       Document = document;

@@ -20,7 +20,8 @@ annotate entity ZLC_C_INVOICE with
                  type: #FIELDGROUP_REFERENCE,
                  targetQualifier: 'FIELD_AREA' },
                { id: 'idFacetLineItem', position: 20, type: #LINEITEM_REFERENCE, targetElement: '_Position' } ]
-  @UI.lineItem: [ { position: 10 } ]
+  @UI.lineItem: [ { position: 10 },
+                  { position: 20, type: #FOR_ACTION, label: 'Send Email', dataAction: 'sendEmail' } ]
   @UI.selectionField: [ { position: 10 } ]
   Document;
 
