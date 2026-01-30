@@ -1,0 +1,21 @@
+unmanaged implementation in class zbp_lc_r_dmounmanaged unique;
+strict ( 2 );
+
+define behavior for ZLC_R_DMOUnmanaged alias Unmanaged
+//late numbering
+lock master
+authorization master ( instance )
+//etag master <field_name>
+{
+  create ( authorization : global );
+  update;
+  delete;
+  field ( readonly ) TableKey;
+
+  mapping for zlc_dmo_unmgnd
+    {
+      TableKey     = gen_key;
+      Description  = text;
+      CreationDate = cdate;
+    }
+}

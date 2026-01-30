@@ -1,0 +1,9 @@
+projection;
+strict ( 2 );
+
+define behavior for ZLC_C_DMOUnmanaged alias Unmanaged
+{
+  use create;
+  use update;
+  use delete;
+}

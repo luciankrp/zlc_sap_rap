@@ -1,0 +1,5 @@
+@EndUserText.label: 'Unmanaged Service'
+@ObjectModel.leadingEntity.name: 'ZLC_C_DMOUNMANAGED'
+define service ZLC_UI_DEMO_UNMANAGED {
+  expose ZLC_C_DMOUnmanaged as Unmanaged;
+}

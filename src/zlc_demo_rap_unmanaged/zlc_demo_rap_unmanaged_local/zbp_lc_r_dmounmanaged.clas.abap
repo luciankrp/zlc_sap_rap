@@ -1,0 +1,5 @@
+CLASS zbp_lc_r_dmounmanaged DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF zlc_r_dmounmanaged.
+ENDCLASS.
+
+CLASS zbp_lc_r_dmounmanaged IMPLEMENTATION.
+ENDCLASS.
